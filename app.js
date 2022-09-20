@@ -10,6 +10,8 @@ const methodoverride = require("method-override");
 const Campground = require("./models/campground");
 const catchAsync = require("./utils/catchAsync");
 const Review = require("./models/review");
+const campgrounds = require("./routes/campgrounds")
+
 
 const app = express();
 app.engine('ejs',ejsMate);
@@ -46,49 +48,11 @@ const validateCampground = (req,res,next) => {
     }
  }
 
-app.get("/",function(req,res){
+app.use("/campgrounds",campgrounds)
+
+ app.get("/",function(req,res){
     res.render("home");
 });
-
-app.get("/campgrounds",catchAsync(async function(req,res){
-    const campgrounds = await Campground.find({});
-    res.render('campgrounds/index', {campgrounds});
-}));
-
-app.get("/campgrounds/new", function(req,res){
-    res.render("campgrounds/new");
-});
-
-app.post("/campgrounds",validateCampground,catchAsync(async function(req,res,next){
-//    if(!req.body.campground) throw new ExpressError("Invalid Campground data  ",400)
-  
-    const campground=  new Campground(req.body.campground);
-    await campground.save();
-    res.redirect(`/campgrounds/${campground._id}`);
-    
-}));
-
-app.get("/campgrounds/:id" ,catchAsync(async function(req,res){
-    const campground = await Campground.findById(req.params.id).populate("reviews");
-    res.render("campgrounds/show",{ campground });
-}));
-
-app.get("/campgrounds/:id/edit" ,catchAsync(async function(req,res){
-    const campground = await Campground.findById(req.params.id);
-    res.render("campgrounds/edit",{campground});
-}));
-
-app.put("/campgrounds/:id",validateCampground,catchAsync(async function(req,res){
-    const { id } = req.params;
-     const campground = await Campground.findByIdAndUpdate(id,{...req.body.campground})
-    res.redirect(`/campgrounds/${campground._id}`);
-}));
-
- app.delete("/campgrounds/:id",catchasync(async function(req,res){
-    const { id } = req.params;
-    await Campground.findByIdAndDelete(id);
-    res.redirect("/campgrounds"); 
- }));
 
 app.post("/campgrounds/:id/reviews", validateReview , catchasync(async(req,res) => {
     const campground = await Campground.findById(req.params.id);
