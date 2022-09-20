@@ -12,13 +12,14 @@ const catchAsync = require("./utils/catchAsync");
 const Review = require("./models/review");
 const campgrounds = require("./routes/campgrounds")
 const reviews = require("./routes/reviews")
+const path = require("path");
 
 const app = express();
 app.engine('ejs',ejsMate);
 app.set('view engine','ejs')
 app.use(express.urlencoded({extended:true}));
 app.use(methodoverride('_method'));
-
+app.use(express.static(path.join(__dirname , "public")));
 
 mongoose.connect("mongodb://localhost:27017/yelp-camp2");
 
