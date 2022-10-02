@@ -12,6 +12,8 @@ const catchAsync = require("./utils/catchAsync");
 const Review = require("./models/review");
 const campgrounds = require("./routes/campgrounds")
 const reviews = require("./routes/reviews")
+const session = require("express-session");
+const flash = require("connect-flash")
 const path = require("path");
 
 const app = express();
@@ -20,6 +22,26 @@ app.set('view engine','ejs')
 app.use(express.urlencoded({extended:true}));
 app.use(methodoverride('_method'));
 app.use(express.static(path.join(__dirname , "public")));
+
+
+const sessionConfig = {
+    secret:'thisshouldbebettersecret!',
+    resave:false,
+    saveUninitialized:true,
+    cookie:{
+        httpOnly:true,
+        expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+        maxAge: 1000 * 60 * 60 * 24 * 7
+    }
+}
+app.use(session(sessionConfig))
+app.use(flash());
+
+app.use((req,res,next) => {
+    res.locals.success = req.flash('success');
+    res.locals.error = req.flash('error');
+    next();
+})
 
 mongoose.connect("mongodb://localhost:27017/yelp-camp2");
 
