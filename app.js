@@ -2,19 +2,18 @@ const { urlencoded } = require("express");
 const express = require("express");
 const mongoose = require("mongoose")
 const ejsMate = require("ejs-mate");
-const Joi = require("joi");
-const {campgroundSchema , reviewSchema} = require("./schema")
-const catchasync = require("./utils/catchAsync");
 const ExpressError = require("./utils/ExpressError");
 const methodoverride = require("method-override");
-const Campground = require("./models/campground");
-const catchAsync = require("./utils/catchAsync");
-const Review = require("./models/review");
-const campgrounds = require("./routes/campgrounds")
-const reviews = require("./routes/reviews")
 const session = require("express-session");
 const flash = require("connect-flash")
 const path = require("path");
+const passport = require("passport")
+const LocalStrategy = require("passport-local")
+const User = require("./models/user")
+
+const userRoutes = require('./routes/users')
+const campgrounds = require("./routes/campgrounds")
+const reviews = require("./routes/reviews")
 
 const app = express();
 app.engine('ejs',ejsMate);
@@ -37,6 +36,13 @@ const sessionConfig = {
 app.use(session(sessionConfig))
 app.use(flash());
 
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+
+passport.serializeUser(User.serializeUser())
+passport.deserializeUser(User.deserializeUser())
+
 app.use((req,res,next) => {
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error');
@@ -51,17 +57,13 @@ db.once("open" , () => {
     console.log("Database Connected");
 });
 
-
-
-
+app.use('/',userRoutes);
 app.use("/campgrounds",campgrounds);
 app.use("/campgrounds/:id/reviews",reviews);
 
  app.get("/",function(req,res){
     res.render("home");
 });
-
-
 
 app.all("*",(req,res,next) => {
  next(new ExpressError('Page Not Found',404));
