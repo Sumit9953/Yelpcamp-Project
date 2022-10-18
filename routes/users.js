@@ -29,5 +29,5 @@ router.post('/login',passport.authenticate('local' , { failureFlash:true , failu
     req.flash('success','Welcome back!')
     res.redirect('/campgrounds');
 })
-
+6
 module.exports = router;
