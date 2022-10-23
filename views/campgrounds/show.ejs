@@ -10,23 +10,27 @@
             </div>
             <ul class="list-group list-group-flush">
               <li class="list-group-item text-muted"><%= campground.location %></li>
+              <li class="list-group-item ">Submitted by <%= campground.author.username%></li>
               <li class="list-group-item">$<%= campground.price %>/Night</li>
             </ul>
+            <% if(currentUser && campground.author.equals(currentUser._id)) { %>
             <div class="card-body">
                 <a class="card-link btn btn-info" href="/campgrounds/<%= campground._id %>/edit">Edit</a>
                 <form class="d-inline" action="/campgrounds/<%= campground._id %>?_method=DELETE" method="post">
                     <button class="btn btn-danger">Delete</button>
                 </form>
             </div>
+        <%  } %>
             <div class="card-footer text-muted">
                 2 Days
             </div>
           </div>
     </div>
     <div class="col-6">
+      <% if(currentUser) { %>
+      <h3>Leave review</h3>
       <form action="/campgrounds/<%= campground._id %>/reviews" method="post" class="validated-form" novalidate>
         <div class="mb-3">
-          <h3>Leave review</h3>
           <label class="form-lable" for="rating">Rating</label>
           <input class="form-range" type="range" min="1" max="5" name="review[rating]" id="rating">
         </div>
@@ -36,6 +40,7 @@
         </div>
         <button class="btn btn-success mb-3">Submit</button>
       </form>
+      <% } %>
       <% for(let review of campground.reviews) { %>
         <div class="card mb-3">
           <div class="card-body"> 
