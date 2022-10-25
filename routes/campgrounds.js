@@ -12,14 +12,14 @@ const Campground = require("../models/campground");
 
 router.route('/')
       .get(catchAsync(campgrounds.index))
-      .post(isLoggedIn, upload.array('image'),validateCampground ,catchAsync(campgrounds.createCampground));
+      .post(isLoggedIn,upload.array('image'),validateCampground ,catchAsync(campgrounds.createCampground));
      
 
 router.get("/new", isLoggedIn, campgrounds.renderNewform);
 
 router.route('/:id')
       .get(catchAsync(campgrounds.showCampground))
-      .put(isLoggedIn,isAuthor ,validateCampground,catchAsync(campgrounds.updateCampground))
+      .put(isLoggedIn,isAuthor,upload.array('image'),validateCampground,catchAsync(campgrounds.updateCampground))
       .delete(isLoggedIn, isAuthor ,catchasync(campgrounds.deleteCampground)); 
 
 

@@ -3,27 +3,25 @@
     <div class="row">
         <h1 class="text-center">Edit Campground</h1>
         <div  class="col-6 offset-3">
-            <form action="/campgrounds/<%= campground._id %>?_method=PUT" method="post" novalidate class="validated-form">
+            <form action="/campgrounds/<%= campground._id %>?_method=PUT" method="post" novalidate class="validated-form"
+                enctype="multipart/form-data">
                 <div class="mb-3">
-                    <label class="foem-lable" for="title">Title</label>
+                    <label class="form-lable" for="title">Title</label>
                     <input class="form-control" type="text" id="title" name="campground[title]" value="<%= campground.title %>" required>
                     <div class="valid-feedback">
                         Looks good !
                     </div>
                 </div>
                 <div class="mb-3">
-                    <label class="foem-lable" for="location">Location</label>
-                    <input class="form-control" type="text" id="title" name="campground[location]" value="<%= campground.location %>" required>
+                    <label class="form-lable" for="location">Location</label>
+                    <input class="form-control" type="text" id="location" name="campground[location]" value="<%= campground.location %>" required>
                     <div class="valid-feedback">
                         Looks good !
                     </div>
                 </div>
                 <div class="mb-3">
-                    <label class="foem-lable" for="location">Image URL</label>
-                    <input class="form-control" type="text" id="title" name="campground[image]" value="<%= campground.image %>" required>
-                    <div class="valid-feedback">
-                        Looks good !
-                    </div>
+                    <label class="form-lable" for="location">Add images</label>
+                    <input type="file" name="image" id="image" multiple>
                 </div>
                 <div class="mb-3">
                     <label class="feom-lable" for="price">Campground Price</label>
@@ -36,7 +34,7 @@
                     </div>
                 </div>
                 <div class="mb-3">
-                    <label class="foem-lable" for="location">Description</label> 
+                    <label class="form-lable" for="location">Description</label> 
                     <textarea class="form-control" type="text" id="title" name="campground[description]" required><%= campground.description %></textarea>
                     <div class="valid-feedback">
                         Looks good !
